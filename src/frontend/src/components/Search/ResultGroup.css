@@ -1,0 +1,125 @@
+/* ===========================
+   ResultGroup
+   =========================== */
+
+.result-group {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  animation: slideUp var(--transition-slow) both;
+  transition: box-shadow var(--transition-normal);
+}
+
+.result-group:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* Header */
+.result-group__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--space-lg);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background var(--transition-fast);
+}
+
+.result-group__header:hover {
+  background: var(--color-bg-card-hover);
+}
+
+.result-group__header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.result-group__header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+/* Icon */
+.result-group__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+}
+
+.result-group__icon--salesOrders {
+  background: var(--color-sales-bg);
+  color: var(--color-sales);
+}
+
+.result-group__icon--purchaseOrders {
+  background: var(--color-purchase-bg);
+  color: var(--color-purchase);
+}
+
+.result-group__icon--materials {
+  background: var(--color-materials-bg);
+  color: var(--color-materials);
+}
+
+.result-group__icon--equipments {
+  background: var(--color-equipment-bg);
+  color: var(--color-equipment);
+}
+
+.result-group__icon--workforce {
+  background: var(--color-workforce-bg);
+  color: var(--color-workforce);
+}
+
+/* Title */
+.result-group__title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+/* Count */
+.result-group__count {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
+.result-group__count--empty {
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+/* Chevron */
+.result-group__chevron {
+  color: var(--color-text-muted);
+  transition: transform var(--transition-normal);
+}
+
+.result-group__chevron--collapsed {
+  transform: rotate(-90deg);
+}
+
+/* Body */
+.result-group__body {
+  border-top: 1px solid var(--color-border);
+}
+
+/* Empty */
+.result-group__empty {
+  padding: var(--space-lg);
+  text-align: center;
+  color: var(--color-text-muted);
+  font-style: italic;
+  font-size: 0.9rem;
+}
