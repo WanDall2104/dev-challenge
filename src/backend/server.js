@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import searchRoutes from './routes/searchRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -17,13 +18,8 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// TODO: Search routes will be added in Commit 2
-app.get('/api/search', (req, res) => {
-  res.json({
-    message: 'Search API endpoint - coming in next commit',
-    query: req.query.q || '',
-  });
-});
+// Search routes
+app.use('/api', searchRoutes);
 
 // Start server
 app.listen(PORT, () => {
