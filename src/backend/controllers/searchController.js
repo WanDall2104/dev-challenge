@@ -29,15 +29,22 @@ function loadJsonFile(filename) {
 }
 
 /**
+ * Remove acentos (diacríticos) de uma string.
+ */
+function removeAccents(str) {
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+/**
  * Verifica se alguma propriedade de um objeto contém o termo buscado.
- * Faz uma busca case-insensitive em todas as propriedades de texto e números.
+ * Faz uma busca case-insensitive e insensível a acentos em todas as propriedades.
  */
 function matchesQuery(obj, query) {
-  const lowerQuery = query.toLowerCase();
+  const normalizedQuery = removeAccents(query.toLowerCase());
 
   return Object.values(obj).some((value) => {
-    const strValue = String(value).toLowerCase();
-    return strValue.includes(lowerQuery);
+    const normalizedValue = removeAccents(String(value).toLowerCase());
+    return normalizedValue.includes(normalizedQuery);
   });
 }
 

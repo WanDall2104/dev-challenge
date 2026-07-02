@@ -39,25 +39,44 @@ function formatValue(key, value) {
 
 function ResultItem({ item, columns, idField, query }) {
   /**
-   * Destaca o texto correspondente ao termo de busca na string
+   * Destaca o texto correspondente ao termo de busca na string, ignorando acentos
    */
   function highlightText(text) {
-
-    if (!query || query.length < 2) return text;
+    if (!query || query.length < 1) return text;
 
     const strText = String(text);
-    const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-    const parts = strText.split(regex);
+    const removeAccents = (str) => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    
+    const normalizedText = removeAccents(strText).toLowerCase();
+    const normalizedQuery = removeAccents(query).toLowerCase();
 
-    if (parts.length === 1) return text;
+    if (!normalizedQuery || !normalizedText.includes(normalizedQuery)) {
+      return text;
+    }
 
-    return parts.map((part, i) =>
-      regex.test(part) ? (
-        <mark key={i} className="result-item__highlight">{part}</mark>
-      ) : (
-        part
-      )
-    );
+    const parts = [];
+    let currentIndex = 0;
+
+    while (true) {
+      const matchIndex = normalizedText.indexOf(normalizedQuery, currentIndex);
+      if (matchIndex === -1) {
+        parts.push(strText.substring(currentIndex));
+        break;
+      }
+
+      if (matchIndex > currentIndex) {
+        parts.push(strText.substring(currentIndex, matchIndex));
+      }
+
+      const matchLength = normalizedQuery.length;
+      const originalMatch = strText.substring(matchIndex, matchIndex + matchLength);
+      parts.push(
+        <mark key={matchIndex} className="result-item__highlight">{originalMatch}</mark>
+      );
+      currentIndex = matchIndex + matchLength;
+    }
+
+    return parts;
   }
 
   const idValue = item[idField];
