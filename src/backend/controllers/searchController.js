@@ -15,17 +15,21 @@ function loadJsonFile(filename) {
   const filePath = join(DATA_DIR, filename);
   const buffer = readFileSync(filePath);
   
+  let text = '';
   try {
     // Tenta decodificar o arquivo como UTF-8 primeiro
     const decoder = new TextDecoder('utf-8', { fatal: true });
-    const text = decoder.decode(buffer);
-    return JSON.parse(text);
+    text = decoder.decode(buffer);
   } catch (e) {
     // Fallback para Windows-1252 (Latin-1) se a decodificação UTF-8 falhar
     const decoder = new TextDecoder('windows-1252');
-    const text = decoder.decode(buffer);
-    return JSON.parse(text);
+    text = decoder.decode(buffer);
   }
+  
+  // Normaliza o caractere de interrogação/substituição corrompido para 'é'
+  text = text.replace(/\uFFFD/g, 'é');
+  
+  return JSON.parse(text);
 }
 
 /**
