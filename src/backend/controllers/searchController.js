@@ -13,8 +13,19 @@ const DATA_DIR = join(__dirname, '..', '..', '..', 'data');
  */
 function loadJsonFile(filename) {
   const filePath = join(DATA_DIR, filename);
-  const raw = readFileSync(filePath, 'utf-8');
-  return JSON.parse(raw);
+  const buffer = readFileSync(filePath);
+  
+  try {
+    // Try decoding as UTF-8 first
+    const decoder = new TextDecoder('utf-8', { fatal: true });
+    const text = decoder.decode(buffer);
+    return JSON.parse(text);
+  } catch (e) {
+    // Fallback to Windows-1252 (Latin-1) if UTF-8 decoding fails
+    const decoder = new TextDecoder('windows-1252');
+    const text = decoder.decode(buffer);
+    return JSON.parse(text);
+  }
 }
 
 /**

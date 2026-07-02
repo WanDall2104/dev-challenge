@@ -1,29 +1,62 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import SearchBar from './components/Search/SearchBar';
 import SearchResults from './components/Search/SearchResults';
-import mockData from './data/data.json';
+import { search } from './services/searchService';
 import './App.css';
 
 function App() {
   const [searchData, setSearchData] = useState(null);
   const [activeQuery, setActiveQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  function handleSearch(query) {
+  const abortControllerRef = useRef(null);
+
+  // Cleanup pending requests on unmount
+  useEffect(() => {
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, []);
+
+  async function handleSearch(query) {
+    // Cancel previous request if any
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
     if (!query) {
       setSearchData(null);
       setActiveQuery('');
+      setError(null);
+      setIsLoading(false);
       return;
     }
 
     setIsLoading(true);
     setActiveQuery(query);
+    setError(null);
 
-    // Simulate API delay, will be replaced by real API call in Commit 4
-    setTimeout(() => {
-      setSearchData(mockData);
+    // Create a new AbortController for this request
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
+    try {
+      const data = await search(query, { signal: controller.signal });
+      setSearchData(data);
       setIsLoading(false);
-    }, 400);
+    } catch (err) {
+      // Ignore AbortError since it means a newer search request was made
+      if (err.name === 'AbortError') {
+        return;
+      }
+      console.error('Search request failed:', err);
+      setError(err.message);
+      setSearchData(null);
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -42,7 +75,18 @@ function App() {
 
         <SearchBar onSearch={handleSearch} isLoading={isLoading} />
 
-        {!searchData && !isLoading && (
+        {error && !isLoading && (
+          <div className="app__error-state">
+            <div className="app__error-icon">⚠️</div>
+            <h3 className="app__error-title">Erro na busca</h3>
+            <p className="app__error-text">{error}</p>
+            <button className="app__retry-button" onClick={() => handleSearch(activeQuery)}>
+              Tentar novamente
+            </button>
+          </div>
+        )}
+
+        {!searchData && !isLoading && !error && (
           <div className="app__empty-state">
             <div className="app__empty-icon">🔍</div>
             <p className="app__empty-text">
@@ -54,7 +98,7 @@ function App() {
           </div>
         )}
 
-        {searchData && (
+        {searchData && !error && (
           <SearchResults data={searchData} query={activeQuery} />
         )}
       </div>
@@ -63,3 +107,4 @@ function App() {
 }
 
 export default App;
+

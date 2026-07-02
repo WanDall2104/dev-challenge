@@ -82,3 +82,58 @@
   background: rgba(59, 130, 246, 0.08);
   text-decoration: underline;
 }
+
+/* Error State */
+.app__error-state {
+  text-align: center;
+  padding: var(--space-2xl) var(--space-xl);
+  background: var(--color-bg-card);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  margin-top: var(--space-lg);
+  animation: slideUp var(--transition-slow) both;
+}
+
+.app__error-icon {
+  font-size: 3rem;
+  margin-bottom: var(--space-md);
+  color: #ef4444;
+}
+
+.app__error-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #ef4444;
+  margin-bottom: var(--space-sm);
+}
+
+.app__error-text {
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+  max-width: 400px;
+  margin: 0 auto var(--space-md) auto;
+  line-height: 1.6;
+}
+
+.app__retry-button {
+  background-color: var(--color-text-accent);
+  color: white;
+  border: none;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+.app__retry-button:hover {
+  background-color: #2563eb;
+  transform: translateY(-1px);
+}
+
+.app__retry-button:active {
+  transform: translateY(0);
+}
+
