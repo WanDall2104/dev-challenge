@@ -60,3 +60,31 @@
   border-radius: 2px;
   padding: 0 2px;
 }
+
+@media (max-width: 576px) {
+  .result-item {
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+  }
+  
+  .result-item__id {
+    min-width: auto;
+    font-size: 0.9rem;
+  }
+  
+  .result-item__fields {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: var(--space-sm) var(--space-md);
+  }
+}
+
+.result-item:focus-visible {
+  outline: 2px solid var(--color-text-accent);
+  outline-offset: -2px;
+  background: var(--color-bg-card-hover);
+}
+
+

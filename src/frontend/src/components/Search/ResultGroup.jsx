@@ -87,8 +87,12 @@ function ResultGroup({ categoryKey, data, query, animationDelay }) {
         </div>
       </button>
 
-      {!isCollapsed && (
-        <div className="result-group__body" id={`group-${categoryKey}`}>
+      <div
+        className={`result-group__body-wrapper ${isCollapsed ? 'result-group__body-wrapper--collapsed' : ''}`}
+        id={`group-${categoryKey}`}
+        aria-hidden={isCollapsed}
+      >
+        <div className="result-group__body">
           {hasResults ? (
             data.items.map((item, index) => (
               <ResultItem
@@ -103,7 +107,7 @@ function ResultGroup({ categoryKey, data, query, animationDelay }) {
             <p className="result-group__empty">nenhum item encontrado</p>
           )}
         </div>
-      )}
+      </div>
     </div>
   );
 }

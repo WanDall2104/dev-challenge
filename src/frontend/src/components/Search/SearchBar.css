@@ -83,3 +83,19 @@
   margin-left: var(--space-sm);
   user-select: none;
 }
+
+@media (max-width: 576px) {
+  .search-bar__shortcut {
+    display: none;
+  }
+  
+  .search-bar__wrapper {
+    padding: 0 var(--space-md);
+  }
+  
+  .search-bar__input {
+    font-size: 0.95rem;
+    padding: 0.75rem var(--space-sm);
+  }
+}
+

@@ -137,3 +137,35 @@
   transform: translateY(0);
 }
 
+@media (max-width: 576px) {
+  .app {
+    padding: var(--space-xl) var(--space-sm);
+  }
+  
+  .app__header {
+    margin-bottom: var(--space-xl);
+  }
+  
+  .app__logo {
+    width: 150px;
+  }
+  
+  .app__subtitle {
+    font-size: 0.85rem;
+  }
+  
+  .app__empty-state {
+    padding: var(--space-xl) var(--space-sm);
+  }
+  
+  .app__empty-icon {
+    font-size: 2.5rem;
+    margin-bottom: var(--space-sm);
+  }
+  
+  .app__empty-text {
+    font-size: 0.9rem;
+  }
+}
+
+

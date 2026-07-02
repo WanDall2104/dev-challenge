@@ -62,7 +62,7 @@ function ResultItem({ item, columns, idField, query }) {
   const idValue = item[idField];
 
   return (
-    <div className="result-item">
+    <div className="result-item" tabIndex={0}>
       <span className="result-item__id">{formatValue(idField, idValue)}</span>
       <div className="result-item__fields">
         {columns
