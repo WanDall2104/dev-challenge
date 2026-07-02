@@ -3,7 +3,7 @@ import ResultItem from './ResultItem';
 import './ResultGroup.css';
 
 /**
- * SVG icons for each category
+ * Ícones SVG correspondentes para cada categoria
  */
 const CATEGORY_ICONS = {
   salesOrders: (

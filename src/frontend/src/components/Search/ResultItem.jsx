@@ -1,7 +1,7 @@
 import './ResultItem.css';
 
 /**
- * Column label mapping for display
+ * Mapeamento de rótulos de colunas para exibição amigável
  */
 const COLUMN_LABELS = {
   SalesOrderID: 'Pedido',
@@ -22,7 +22,7 @@ const COLUMN_LABELS = {
 };
 
 /**
- * Format a value for display (add # prefix to IDs, format currency, etc.)
+ * Formata um valor para exibição (adiciona prefixo # para IDs, formata moedas, etc.)
  */
 function formatValue(key, value) {
   if (key.endsWith('ID') || key.endsWith('Id')) {
@@ -39,9 +39,10 @@ function formatValue(key, value) {
 
 function ResultItem({ item, columns, idField, query }) {
   /**
-   * Highlight matching text in a string
+   * Destaca o texto correspondente ao termo de busca na string
    */
   function highlightText(text) {
+
     if (!query || query.length < 2) return text;
 
     const strText = String(text);

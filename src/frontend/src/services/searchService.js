@@ -1,12 +1,12 @@
 /**
- * Service to handle search queries to the backend.
+ * Serviço para gerenciar requisições de busca para o backend.
  */
 
 /**
- * Searches the ERP database for the given query.
- * @param {string} query The search query string.
- * @param {object} options Additional options such as fetch `signal`.
- * @returns {Promise<object>} The JSON response from the API.
+ * Busca no banco de dados do ERP de acordo com o termo informado.
+ * @param {string} query O termo de busca enviado pelo usuário.
+ * @param {object} options Opções adicionais como o `signal` do AbortController.
+ * @returns {Promise<object>} Resposta JSON formatada da API.
  */
 export async function search(query, options = {}) {
   const { signal } = options;
@@ -20,15 +20,15 @@ export async function search(query, options = {}) {
     });
 
     if (!response.ok) {
-      // Try to parse error details from JSON response
+      // Tenta extrair detalhes do erro retornados pelo JSON da API
       let errorMessage = 'Ocorreu um erro ao realizar a busca.';
       try {
         const errorData = await response.json();
         if (errorData && errorData.error) {
           errorMessage = errorData.error;
         }
-      } catch (e) {
-        // Fallback to generic HTTP status text
+      } catch {
+        // Fallback para o status HTTP genérico caso não seja um JSON válido
         errorMessage = `Erro ${response.status}: ${response.statusText}`;
       }
       throw new Error(errorMessage);
@@ -36,12 +36,12 @@ export async function search(query, options = {}) {
 
     return await response.json();
   } catch (error) {
-    // If the request was aborted, propagate the abort error so we can ignore it in the caller
+    // Se a requisição foi abortada, propaga o erro para o chamador ignorar
     if (error.name === 'AbortError') {
       throw error;
     }
     
-    // Otherwise, throw a general search error
+    // Caso contrário, propaga o erro de conexão/busca genérico
     throw new Error(error.message || 'Falha de conexão com o servidor.');
   }
 }

@@ -4,24 +4,24 @@ import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-// Path to the data directory (root of the project)
+// Caminho para o diretório de dados (na raiz do projeto)
 const DATA_DIR = join(__dirname, '..', '..', '..', 'data');
 
 /**
- * Load and parse a JSON data file from the data directory.
- * Files are re-read on each request to reflect any changes.
+ * Carrega e analisa um arquivo JSON do diretório de dados.
+ * Os arquivos são lidos a cada requisição para refletir quaisquer mudanças em tempo real.
  */
 function loadJsonFile(filename) {
   const filePath = join(DATA_DIR, filename);
   const buffer = readFileSync(filePath);
   
   try {
-    // Try decoding as UTF-8 first
+    // Tenta decodificar o arquivo como UTF-8 primeiro
     const decoder = new TextDecoder('utf-8', { fatal: true });
     const text = decoder.decode(buffer);
     return JSON.parse(text);
   } catch (e) {
-    // Fallback to Windows-1252 (Latin-1) if UTF-8 decoding fails
+    // Fallback para Windows-1252 (Latin-1) se a decodificação UTF-8 falhar
     const decoder = new TextDecoder('windows-1252');
     const text = decoder.decode(buffer);
     return JSON.parse(text);
@@ -29,8 +29,8 @@ function loadJsonFile(filename) {
 }
 
 /**
- * Check if any property value of an object contains the search query.
- * Searches case-insensitive across all string and number values.
+ * Verifica se alguma propriedade de um objeto contém o termo buscado.
+ * Faz uma busca case-insensitive em todas as propriedades de texto e números.
  */
 function matchesQuery(obj, query) {
   const lowerQuery = query.toLowerCase();
@@ -42,8 +42,8 @@ function matchesQuery(obj, query) {
 }
 
 /**
- * Category configuration: maps each data source to its label,
- * filename, and display properties.
+ * Configuração das categorias: mapeia cada fonte de dados com seu respectivo rótulo,
+ * arquivo correspondente e propriedades de exibição na tela.
  */
 const CATEGORIES = [
   {
@@ -89,14 +89,14 @@ const CATEGORIES = [
 ];
 
 /**
- * Main search handler.
- * Reads all data files, searches for the query across all properties,
- * and returns results grouped by category.
+ * Endpoint principal de busca.
+ * Lê todos os arquivos de dados, pesquisa em todas as tabelas e propriedades,
+ * e retorna os resultados correspondentes agrupados por categoria.
  */
 export function search(req, res) {
   const query = req.query.q;
 
-  // Validate query parameter
+  // Validação do parâmetro de busca obrigatório
   if (!query || query.trim() === '') {
     return res.status(400).json({
       error: 'O parâmetro de busca "q" é obrigatório.',
@@ -132,7 +132,7 @@ export function search(req, res) {
       results,
     });
   } catch (error) {
-    console.error('Search error:', error.message);
+    console.error('Erro ao realizar busca:', error.message);
     return res.status(500).json({
       error: 'Erro interno ao realizar a busca.',
       details: error.message,

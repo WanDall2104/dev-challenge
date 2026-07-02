@@ -12,7 +12,7 @@ function App() {
 
   const abortControllerRef = useRef(null);
 
-  // Cleanup pending requests on unmount
+  // Cancela requisições pendentes ao desmontar o componente
   useEffect(() => {
     return () => {
       if (abortControllerRef.current) {
@@ -22,7 +22,7 @@ function App() {
   }, []);
 
   async function handleSearch(query) {
-    // Cancel previous request if any
+    // Cancela a requisição anterior se houver
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
     }
@@ -39,7 +39,7 @@ function App() {
     setActiveQuery(query);
     setError(null);
 
-    // Create a new AbortController for this request
+    // Cria um novo AbortController para esta requisição
     const controller = new AbortController();
     abortControllerRef.current = controller;
 
@@ -48,11 +48,11 @@ function App() {
       setSearchData(data);
       setIsLoading(false);
     } catch (err) {
-      // Ignore AbortError since it means a newer search request was made
+      // Ignora AbortError pois indica que uma nova busca foi disparada
       if (err.name === 'AbortError') {
         return;
       }
-      console.error('Search request failed:', err);
+      console.error('Falha na requisição de busca:', err);
       setError(err.message);
       setSearchData(null);
       setIsLoading(false);
@@ -107,4 +107,3 @@ function App() {
 }
 
 export default App;
-
