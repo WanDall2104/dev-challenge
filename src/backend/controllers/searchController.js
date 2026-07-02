@@ -52,6 +52,42 @@ function matchesQuery(obj, query) {
   });
 }
 
+function getRelevanceScore(item, query, nameField, idField) {
+  const lowerQuery = query.toLowerCase();
+  const normalizedQuery = removeAccents(lowerQuery);
+  let score = 0;
+
+  for (const [key, value] of Object.entries(item)) {
+    const rawStrValue = String(value).toLowerCase();
+    const strValue = removeAccents(rawStrValue);
+    
+    if (strValue.includes(normalizedQuery)) {
+      let itemScore = 0;
+      
+      if (key === idField) {
+        if (strValue === normalizedQuery) itemScore += 100;
+        else if (strValue.startsWith(normalizedQuery)) itemScore += 80;
+        else itemScore += 50;
+      } else if (key === nameField) {
+        if (strValue === normalizedQuery) itemScore += 90;
+        else if (strValue.startsWith(normalizedQuery)) itemScore += 70;
+        else itemScore += 40;
+      } else {
+        if (strValue.startsWith(normalizedQuery)) itemScore += 30;
+        else itemScore += 10;
+      }
+      
+      // Bônus por correspondência de acentuação exata (sem precisar de normalização de acentos)
+      if (rawStrValue.includes(lowerQuery)) {
+        itemScore += 20;
+      }
+      
+      score += itemScore;
+    }
+  }
+  return score;
+}
+
 /**
  * Configuração das categorias: mapeia cada fonte de dados com seu respectivo rótulo,
  * arquivo correspondente e propriedades de exibição na tela.
@@ -124,6 +160,13 @@ export function search(req, res) {
     for (const category of CATEGORIES) {
       const data = loadJsonFile(category.file);
       const matched = data.filter((item) => matchesQuery(item, trimmedQuery));
+
+      // Ordena por relevância
+      matched.sort((a, b) => {
+        const scoreA = getRelevanceScore(a, trimmedQuery, category.nameField, category.idField);
+        const scoreB = getRelevanceScore(b, trimmedQuery, category.nameField, category.idField);
+        return scoreB - scoreA;
+      });
 
       results[category.key] = {
         label: category.label,

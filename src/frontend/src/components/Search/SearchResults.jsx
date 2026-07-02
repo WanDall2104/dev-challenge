@@ -6,6 +6,17 @@ const CATEGORY_ORDER = ['salesOrders', 'purchaseOrders', 'materials', 'equipment
 function SearchResults({ data, query }) {
   if (!data) return null;
 
+  // Ordena as chaves de categorias de forma que aquelas que contêm resultados (count > 0) apareçam primeiro
+  const sortedCategories = [...CATEGORY_ORDER].sort((a, b) => {
+    const countA = data.results[a]?.count || 0;
+    const countB = data.results[b]?.count || 0;
+    
+    if (countA > 0 && countB === 0) return -1;
+    if (countA === 0 && countB > 0) return 1;
+    
+    return CATEGORY_ORDER.indexOf(a) - CATEGORY_ORDER.indexOf(b);
+  });
+
   return (
     <section className="search-results" aria-label="Resultados da busca">
       <div className="search-results__summary">
@@ -22,7 +33,7 @@ function SearchResults({ data, query }) {
       </div>
 
       <div className="search-results__groups">
-        {CATEGORY_ORDER.map((key, index) => (
+        {sortedCategories.map((key, index) => (
           <ResultGroup
             key={key}
             categoryKey={key}
